@@ -1,14 +1,14 @@
 import { Stack } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
-
-import { ScreenContent } from '~/components/ScreenContent';
+import { StyleSheet, View, Text } from 'react-native';
+import MarketList from '~/components/MarketList';
 
 export default function Home() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Market' }} />
+      <Stack.Screen options={{ title: 'Market', headerShown: false }} />
       <View style={styles.container}>
-        <ScreenContent path="app/(tabs)/two.tsx" title="Market" />
+        <Text className="text-3xl font-bold text-gray-900 mb-4">Crypto Market</Text>
+        <MarketList />
       </View>
     </>
   );
@@ -17,6 +17,8 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    backgroundColor: '#F6F8FA',
+    paddingVertical: 24,
+    paddingHorizontal: 16,
   },
 });
