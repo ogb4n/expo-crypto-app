@@ -1,7 +1,9 @@
-import { Link, Tabs } from 'expo-router';
-
 import { HeaderButton } from '../../components/HeaderButton';
 import { TabBarIcon } from '../../components/TabBarIcon';
+import Octicons from '@expo/vector-icons/Octicons';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { Link, Tabs } from 'expo-router';
 
 export default function TabLayout() {
   return (
@@ -12,8 +14,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Home',
+          tabBarIcon: () => <AntDesign name="home" size={24} />,
           headerRight: () => (
             <Link href="/modal" asChild>
               <HeaderButton />
@@ -24,8 +26,24 @@ export default function TabLayout() {
       <Tabs.Screen
         name="two"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Market',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="chart-timeline-variant" size={24} color="black" />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="three"
+        options={{
+          title: 'Notifications',
+          tabBarIcon: ({ color }) => <Octicons name="bell" size={24} color="black" />,
+        }}
+      />
+      <Tabs.Screen
+        name="four"
+        options={{
+          title: 'Settings  ',
+          tabBarIcon: ({ color }) => <Octicons name="gear" size={24} color="black" />,
         }}
       />
     </Tabs>

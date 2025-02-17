@@ -6,9 +6,9 @@ import { ScreenContent } from '~/components/ScreenContent';
 export default function Home() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Market' }} />
+      <Stack.Screen options={{ title: 'Notifications' }} />
       <View style={styles.container}>
-        <ScreenContent path="app/(tabs)/two.tsx" title="Market" />
+        <ScreenContent path="app/(tabs)/three.tsx" title="Notifications" />
       </View>
     </>
   );
