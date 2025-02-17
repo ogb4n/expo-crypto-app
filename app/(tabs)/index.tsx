@@ -1,14 +1,16 @@
 import { Stack } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
 import { ScreenContent } from '~/components/ScreenContent';
 
 export default function Home() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Home' }} />
+      <Stack.Screen />
       <View style={styles.container}>
-        <ScreenContent path="app/(tabs)/index.tsx" title="Home" />
+        <Text style={styles.title} className="text-green-800">
+          Je m'appelle Henry
+        </Text>
       </View>
     </>
   );
@@ -18,5 +20,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
