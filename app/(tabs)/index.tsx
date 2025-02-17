@@ -1,16 +1,20 @@
 import { Stack } from 'expo-router';
 import { StyleSheet, View, Text } from 'react-native';
 
-import { ScreenContent } from '~/components/ScreenContent';
+import { BalanceCard } from '~/components/BalanceCard';
+import { PortfolioList } from '~/components/Portfolio';
 
 export default function Home() {
   return (
     <>
       <Stack.Screen />
       <View style={styles.container}>
-        <Text style={styles.title} className="text-green-800">
-          Je m'appelle Henry
+        <Text style={styles.title} className="mt-[3.5rem]">
+          Nora Johnson
         </Text>
+        <Text className="text-gray-500">Welcome back 👋</Text>
+        <BalanceCard />
+        <PortfolioList />
       </View>
     </>
   );
