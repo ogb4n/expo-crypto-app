@@ -15,7 +15,7 @@ const ONBOARDING_DATA = [
   },
   {
     title: "Gérez votre Portfolio",
-    description: "Visualisez vos investissements en un coup d'œil",
+    description: "Visualisez vos investissements en un coup d'œil ",
     image: require('../../assets/onboarding/onboarding2.png'),
   },
   {
