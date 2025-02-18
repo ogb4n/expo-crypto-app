@@ -7,7 +7,7 @@ export default function Home() {
     <>
       <Stack.Screen options={{ title: 'Market', headerShown: false }} />
       <View style={styles.container}>
-        <Text className="text-3xl font-bold text-gray-900 mb-4">Crypto Market</Text>
+        <Text className="text-4xl text-gray-700 mb-6 mt-4">Crypto Market</Text>
         <MarketList />
       </View>
     </>
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F6F8FA',
-    paddingVertical: 24,
+    paddingTop: 60,
     paddingHorizontal: 16,
   },
 });

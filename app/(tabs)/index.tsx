@@ -6,7 +6,7 @@ import { ScreenContent } from '~/components/ScreenContent';
 export default function Home() {
   return (
     <>
-      <Stack.Screen />
+      <Stack.Screen options={{ gestureEnabled: false }} />
       <View style={styles.container}>
         <Text style={styles.title} className="text-green-800">
           Je m'appelle Henry

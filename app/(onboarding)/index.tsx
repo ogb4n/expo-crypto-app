@@ -1,110 +1,98 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, Dimensions, ImageBackground, StyleSheet } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Link } from 'expo-router';
-import { FontAwesome } from '@expo/vector-icons';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+import { Video } from 'expo-av';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const ONBOARDING_DATA = [
   {
     title: "Bienvenue sur CryptoApp",
     description: "Suivez l'évolution des cryptomonnaies en temps réel",
-    image: require('../../assets/onboarding/onboarding1.png'),
   },
   {
     title: "Gérez votre Portfolio",
-    description: "Visualisez vos investissements en un coup d'œil ",
-    image: require('../../assets/onboarding/onboarding2.png'),
+    description: "Visualisez vos investissements en un coup d'œil",
   },
   {
     title: "Restez Informé",
     description: "Recevez les dernières actualités crypto",
-    image: require('../../assets/onboarding/onboarding3.png'),
   },
 ];
 
 export default function Onboarding() {
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollViewRef = useRef(null);
-
-  const handleNext = useCallback(() => {
-    if (activeIndex < ONBOARDING_DATA.length - 1) {
-      scrollViewRef.current?.scrollTo({
-        x: SCREEN_WIDTH * (activeIndex + 1),
-        animated: true,
-      });
-      setActiveIndex(activeIndex + 1);
-    }
-  }, [activeIndex]);
-
-  const handleSkip = useCallback(() => {
-    scrollViewRef.current?.scrollTo({
-      x: SCREEN_WIDTH * (ONBOARDING_DATA.length - 1),
-      animated: true,
-    });
-    setActiveIndex(ONBOARDING_DATA.length - 1);
-  }, []);
+  const videoRef = useRef(null);
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container} edges={['left', 'right']}>
-        <Link href="/(tabs)" asChild>
-          <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
-            <Text style={styles.skip}>Skip</Text>
-          </TouchableOpacity>
-        </Link>
-        <Animated.ScrollView
-          ref={scrollViewRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onScroll={e => {
-            const newIndex = Math.round(e.nativeEvent.contentOffset.x / SCREEN_WIDTH);
-            if (newIndex !== activeIndex) setActiveIndex(newIndex);
-          }}
-          scrollEventThrottle={16}>
-          {ONBOARDING_DATA.map((item, index) => (
-            <ImageBackground
-              key={index}
-              source={item.image}
-              style={styles.image}
-              resizeMode="cover"
-            >
-              <View style={styles.overlay}>
-                <Text style={styles.title}>{item.title}</Text>
-                <Text style={styles.description}>{item.description}</Text>
-              </View>
-            </ImageBackground>
-          ))}
-        </Animated.ScrollView>
-
-        <View style={styles.footer}>
-          <View style={styles.indicators}>
-            {ONBOARDING_DATA.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.indicator,
-                  index === activeIndex ? styles.activeIndicator : styles.inactiveIndicator,
-                ]}
-              />
-            ))}
-          </View>
-          {activeIndex === ONBOARDING_DATA.length - 1 ? (
-            <Link href="/(tabs)" asChild>
-              <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Commencer</Text>
-              </TouchableOpacity>
-            </Link>
-          ) : (
-            <TouchableOpacity onPress={handleNext} style={styles.button}>
-              <FontAwesome name="arrow-right" size={24} color="white" />
+      <View style={styles.container}>
+        <Video
+          ref={videoRef}
+          source={require('../../assets/onboarding/onboarding.mp4')}
+          style={styles.backgroundVideo}
+          resizeMode="cover"
+          shouldPlay
+          isLooping
+          isMuted
+        />
+        
+        <SafeAreaView style={styles.safeArea} edges={['left', 'right']}>
+          <Link href="/(tabs)" asChild>
+            <TouchableOpacity style={styles.skipButton}>
+              <Text style={styles.skipText}>Skip</Text>
             </TouchableOpacity>
-          )}
-        </View>
-      </SafeAreaView>
+          </Link>
+
+          <View style={styles.scrollViewContainer}>
+            <Animated.ScrollView
+              ref={scrollViewRef}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onScroll={e => {
+                const newIndex = Math.round(e.nativeEvent.contentOffset.x / SCREEN_WIDTH);
+                if (newIndex !== activeIndex) setActiveIndex(newIndex);
+              }}
+              scrollEventThrottle={16}>
+              {ONBOARDING_DATA.map((item, index) => (
+                <View key={index} style={styles.slide}>
+                  <View style={styles.contentContainer}>
+                    <Text style={styles.title}>{item.title}</Text>
+                    <Text style={styles.description}>{item.description}</Text>
+                  </View>
+                </View>
+              ))}
+            </Animated.ScrollView>
+          </View>
+
+          <View style={styles.footer}>
+            <View style={styles.indicators}>
+              {ONBOARDING_DATA.map((_, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.indicator,
+                    index === activeIndex ? styles.activeIndicator : styles.inactiveIndicator,
+                  ]}
+                />
+              ))}
+            </View>
+            {activeIndex === ONBOARDING_DATA.length - 1 && (
+              <View style={styles.buttonContainer}>
+                <Link href="/(tabs)" asChild>
+                  <TouchableOpacity style={styles.button}>
+                    <Text style={styles.buttonText}>Commencer</Text>
+                  </TouchableOpacity>
+                </Link>
+              </View>
+            )}
+          </View>
+        </SafeAreaView>
+      </View>
     </SafeAreaProvider>
   );
 }
@@ -112,54 +100,76 @@ export default function Onboarding() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'black',
   },
-  image: {
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
-    justifyContent: 'center',
+  backgroundVideo: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
-  overlay: {
+  safeArea: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  scrollViewContainer: {
+    flex: 1,
+  },
+  slide: {
+    width: SCREEN_WIDTH,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  contentContainer: {
+    alignItems: 'center',
     paddingHorizontal: 24,
+    marginTop: 32,
+  },
+  skipButton: {
+    position: 'absolute',
+    top: 60,
+    right: 24,
+    zIndex: 1,
+  },
+  skipText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
   },
   title: {
     color: 'white',
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 16,
   },
   description: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 18,
     textAlign: 'center',
+    opacity: 0.8,
   },
   footer: {
     position: 'absolute',
-    bottom: 24,
+    bottom: 55,
     left: 0,
     right: 0,
+    paddingHorizontal: 24,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 24,
-  },
-  skipButton: {
-    position: 'absolute',
-    top: 50,
-    right: 24,
-    zIndex: 1,
-  },
-  skip: {
-    color: 'white',
-    fontSize: 16,
   },
   indicators: {
     flexDirection: 'row',
     alignItems: 'center',
+    left: 24,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    right: 24,
+    bottom: -19,
   },
   indicator: {
     width: 8,
@@ -168,22 +178,24 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   activeIndicator: {
-    backgroundColor: 'blue',
+    backgroundColor: '#FFFF',
+    width: 24,
   },
   inactiveIndicator: {
-    backgroundColor: 'gray',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
   },
   button: {
-    backgroundColor: 'blue',
-    padding: 12,
-    borderRadius: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 30,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });
