@@ -17,6 +17,8 @@ interface CryptoDetails {
   logoUrl?: string;
 }
 
+const BINANCE_API_URL = 'https://api.binance.com/api/v3';
+
 const getCryptoLogo = (symbol: string) => {
   return `https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/${symbol.toLowerCase()}.png`;
 };
@@ -37,7 +39,7 @@ export default function CryptoDetails() {
   const fetchCryptoDetails = async () => {
     try {
       setError(null);
-      const response = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${id}`);
+      const response = await fetch(`${BINANCE_API_URL}/ticker/24hr?symbol=${id}`);
       const data = await response.json();
       
       if (data.symbol) {
