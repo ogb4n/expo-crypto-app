@@ -15,6 +15,7 @@ export const LastSeen = () => {
         data={lastSeen}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <CurrencyCard item={item} />}
+        maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
       />
     </View>
   );
