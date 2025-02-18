@@ -2,23 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, Image, FlatList, RefreshControl, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useRecentCryptoStore } from '../store/useRecentCryptoStore';
-
-const BINANCE_API_URL = 'https://api.binance.com/api/v3/ticker/24hr';
-
-interface CryptoData {
-  symbol: string;
-  lastPrice: string;
-  priceChangePercent: string;
-  volume: string;
-  highPrice: string;
-  lowPrice: string;
-  baseSymbol?: string;
-  logoUrl?: string;
-}
-
-const getCryptoLogo = (symbol: string) => {
-  return `https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/${symbol.toLowerCase()}.png`;
-};
+import { cryptoApi } from '../app/api/api';
+import { CryptoData } from '../app/api/types';
 
 const MarketList = () => {
   const [cryptos, setCryptos] = useState<CryptoData[]>([]);
@@ -31,22 +16,8 @@ const MarketList = () => {
   const fetchCryptos = async () => {
     try {
       setError(null);
-      const response = await fetch(BINANCE_API_URL);
-      const data = await response.json();
-      
-      const usdtPairs = data
-        .filter((item: CryptoData) => item.symbol.endsWith('USDT'))
-        .map((item: CryptoData) => {
-          const baseSymbol = item.symbol.replace('USDT', '');
-          return {
-            ...item,
-            baseSymbol,
-            logoUrl: getCryptoLogo(baseSymbol)
-          };
-        })
-        .slice(0, 50);
-
-      setCryptos(usdtPairs);
+      const data = await cryptoApi.getMarketData();
+      setCryptos(data);
     } catch (error) {
       console.error('Erreur lors de la récupération des cryptomonnaies :', error);
       setError('Impossible de charger les données');
@@ -82,7 +53,7 @@ const MarketList = () => {
     router.push(`/crypto/${item.symbol}`);
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: CryptoData }) => (
     <TouchableOpacity 
       onPress={() => handleCryptoPress(item)}
       className="bg-white/90 p-4 my-1 rounded-xl flex-row items-center"

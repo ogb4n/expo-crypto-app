@@ -2,28 +2,10 @@ import { Stack, useRouter, useGlobalSearchParams } from 'expo-router';
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { cryptoApi } from '../api/api';
+import { CryptoDetails } from '../api/types';
 
-interface CryptoDetails {
-  symbol: string;
-  lastPrice: string;
-  priceChangePercent: string;
-  volume: string;
-  highPrice: string;
-  lowPrice: string;
-  openPrice: string;
-  quoteVolume: string;
-  count: number;
-  baseSymbol?: string;
-  logoUrl?: string;
-}
-
-const BINANCE_API_URL = 'https://api.binance.com/api/v3';
-
-const getCryptoLogo = (symbol: string) => {
-  return `https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/${symbol.toLowerCase()}.png`;
-};
-
-export default function CryptoDetails() {
+export default function CryptoDetailsScreen() {
   const { id } = useGlobalSearchParams();
   const router = useRouter();
   const [cryptoData, setCryptoData] = useState<CryptoDetails | null>(null);
@@ -39,17 +21,8 @@ export default function CryptoDetails() {
   const fetchCryptoDetails = async () => {
     try {
       setError(null);
-      const response = await fetch(`${BINANCE_API_URL}/ticker/24hr?symbol=${id}`);
-      const data = await response.json();
-      
-      if (data.symbol) {
-        const baseSymbol = data.symbol.replace('USDT', '');
-        setCryptoData({
-          ...data,
-          baseSymbol,
-          logoUrl: getCryptoLogo(baseSymbol)
-        });
-      }
+      const data = await cryptoApi.getCryptoDetails(id as string);
+      setCryptoData(data);
     } catch (error) {
       console.error('Erreur lors de la récupération des détails :', error);
       setError("Impossible de charger les données");
