@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { StyleSheet, View, Text } from 'react-native';
 
 import { BalanceCard } from '~/components/BalanceCard';
+import { LastSeen } from '~/components/LastSeen';
 import { PortfolioList } from '~/components/Portfolio';
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
         <Text className="text-gray-500">Welcome back 👋</Text>
         <BalanceCard />
         <PortfolioList />
+        <LastSeen />
       </View>
     </>
   );

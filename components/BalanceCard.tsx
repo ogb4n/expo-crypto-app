@@ -17,7 +17,7 @@ export const BalanceCard = () => {
         <View className="display-flex mx-auto mt-2 w-fit flex-row gap-2">
           <Text className="mt-2 text-center text-sm font-semibold text-white">Weekly Profit</Text>
           <View className="mx-auto mt-1 flex flex-row items-center rounded-full bg-white/20 px-3 py-1">
-            <Text className="text-white">2.35%</Text>
+            <Text className="text-white ">2.35% ▲</Text>
           </View>
         </View>
       </View>
